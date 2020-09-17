@@ -1,12 +1,22 @@
 # ANTsR docker
 
-## Building
+## Building and version information
 
-The default is to build master:HEAD, but you can specify a tag to build a
-specific version using build args, like this:
+The default is to build the main branch HEAD. You can build a specific version
+using build args: 
 
 ```
 docker build --build-arg antsr_version="v0.5.6.4" -t antsr .
+```
+
+This allows you to control the ANTsR version, but ITKR and ANTsRCore will be
+built from the latest commit.
+
+From within the container, find the version of all packages and dependencies
+with 
+
+```
+sessioninfo::package_info("ANTsR")
 ```
 
 ## Running R or Rscript

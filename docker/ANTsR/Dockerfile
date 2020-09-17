@@ -3,17 +3,26 @@ FROM ubuntu:bionic-20200713
 # Default to build latest version
 ARG antsr_version="HEAD" 
 
+# Dependencies option. Defaults to "TRUE" for everything
+# Set to NA to get a smaller set of essentials
+ARG antsr_dependencies=TRUE
+
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
                     apt-transport-https \
                     build-essential \
                     ca-certificates \
                     curl \
+                    file \
                     git \
                     gnupg \
                     libcurl4-gnutls-dev \
                     libssl-dev \
                     libxml2-dev \
+                    tcl \
+                    tcl-dev \
+                    tk \
+                    tk-dev \
                     wget
 
 # add R stuff for apt
@@ -31,8 +40,16 @@ RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/" >> /e
 
 RUN Rscript -e "install.packages(\"devtools\", repos = \"https://cloud.r-project.org\", dependencies = T)" \
             -e "library(devtools)" \
-            -e "install_github(\"stnava/cmaker\")" \
-            -e "install_github(\"stnava/ANTsR\", ref=\"${antsr_version}\")"
+            -e "install_github(\"stnava/cmaker\")"
+# Saves build time but can merge these layers once build is stable
+#
+# The warnings variable is needed to suppress warnings from tcltk that turn into an
+# error about not finding DISPLAY
+#
+# Also suppresses missing dependencies
+RUN R_REMOTES_NO_ERRORS_FROM_WARNINGS=true Rscript -e "library(devtools)" \
+            -e "install_github(\"cran/ifultools\")" \
+            -e "install_github(\"cookpa/ANTsR\", ref=\"${antsr_version}\", dependencies=${antsr_dependencies})"
 
 ENV R_DEFAULT_PACKAGES="datasets,utils,grDevices,graphics,stats,methods,ANTsR"
 ENV ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
