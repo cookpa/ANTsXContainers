@@ -1,5 +1,8 @@
 # ANTsR docker
 
+This Dockerfile builds ANTsR using "method1" as described in the main README,
+with devtools and install_github.
+
 ## Building and version information
 
 The default is to build the main branch HEAD. You can build a specific version
@@ -17,6 +20,13 @@ with
 
 ```
 sessioninfo::package_info("ANTsR")
+```
+
+By default, all dependencies are included. To build a minimal set of
+dependencies, run 
+
+```
+docker build --build-arg antsr_dependencies=NA -t antsr .
 ```
 
 ## Running R or Rscript
