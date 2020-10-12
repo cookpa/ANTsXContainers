@@ -14,10 +14,10 @@ RUN apt-get update && \
     . /opt/venv/bin/activate && \
     pip install wheel && \
     pip install --use-feature=2020-resolver --requirement /opt/requirements.txt && \
-    pip install --use-feature=2020-resolver git+https://github.com/ANTsX/ANTsPyNet.git && \
+    pip install --use-feature=2020-resolver git+https://github.com/ANTsX/ANTsPyNet.git@94eda8d3c609ae9b3b98d5b81dbc68dce9df8a14 && \
     git clone https://github.com/ANTsX/ANTsPy.git /opt/ANTsPy
 
-FROM python:3.8.5-slim
+FROM python:3.8.6-slim
 
 COPY --from=builder /opt/venv /opt/venv
 
