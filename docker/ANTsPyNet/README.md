@@ -9,3 +9,11 @@ We don't use ANTsPy as a base layer because of dependency conflicts.
 ## Version and dependency information
 
 Run the container with `-m pip freeze` to get version information.
+
+
+## Run time data
+
+ANTsPyNet downloads data at run time. If you run the container without Internet
+access, you will need to download the data separately and then mount it within
+the container at `~/.keras/ANTsXNet`.
+
