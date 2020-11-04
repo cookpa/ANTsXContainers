@@ -17,3 +17,8 @@ ANTsPyNet downloads data at run time. If you run the container without Internet
 access, you will need to download the data separately and then mount it within
 the container at `~/.keras/ANTsXNet`.
 
+See 
+
+https://github.com/ANTsX/ANTsPyNet/blob/master/antspynet/utilities/get_antsxnet_data.py
+
+for details.
