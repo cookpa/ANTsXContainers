@@ -45,7 +45,7 @@ if not path.exists(kk_file):
     kk_white_matter = atropos['probability_images'][3] + atropos['probability_images'][4]
     print("    KellyKapowski:  calculating\n")
     kk = ants.kelly_kapowski(s=kk_segmentation, g=atropos['probability_images'][2],
-                             w=kk_white_matter, its=45, r=0.025, m=1.5, x=0, verbose=1)
+                             w=kk_white_matter, its=45, r=0.025, m=1.5, t=10, x=0, verbose=1)
     ants.image_write(kk, kk_file)
 else:
     print("    Reading\n")
