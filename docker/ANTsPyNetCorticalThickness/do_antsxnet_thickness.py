@@ -1,5 +1,6 @@
 import ants
 import antspynet
+import argparse
 import sys
 
 import os.path
@@ -10,9 +11,16 @@ import tensorflow as tf
 # Script by Nick Tustison
 # https://github.com/ntustison/PaperANTsX/blob/master/Data/Scripts/RunStudy/do_antsxnet_thickness.py
 
-t1_file = sys.argv[1]
-output_prefix = sys.argv[2]
-threads = int(sys.argv[3])
+parser = argparse.ArgumentParser()
+parser.add_argument("-a", "--anatomical-image", help="Input anatomical image (T1w)", type=str, required=True)
+parser.add_argument("-o", "--output-prefix", help="Output prefix", type=str)
+parser.add_argument("-t", "--threads", help="Number of threads", type=int, default=1)
+args = parser.parse_args()
+
+# Internal variables for args
+t1_file = args.anatomical_image
+output_prefix = args.output_prefix
+threads = args.threads
 
 tf.keras.backend.clear_session()
 config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=threads,

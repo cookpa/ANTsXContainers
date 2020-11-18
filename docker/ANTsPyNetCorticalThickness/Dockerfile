@@ -1,38 +1,29 @@
 FROM cookpa/antspynet:latest
 
-COPY requirements.txt /opt
-
-RUN apt-get update && \
-    apt-get install -y cmake=3.13.4-1 && \
-    python3 -m venv /opt/venv && \
-    . /opt/venv/bin/activate && \
-    pip install wheel && \
-    pip install --use-feature=2020-resolver --requirement /opt/requirements.txt && \
-    pip install --use-feature=2020-resolver git+https://github.com/ANTsX/ANTsPyNet.git@94eda8d3c609ae9b3b98d5b81dbc68dce9df8a14 && \
-    git clone https://github.com/ANTsX/ANTsPy.git /opt/ANTsPy
-
-FROM python:3.8.6-slim
-
-COPY --from=builder /opt/venv /opt/venv
+# Switch back to root from antspyuser in base layer
+USER root
 
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-ENV ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
 
-# Make a user and add data to the expected location
-RUN useradd --create-home antspyuser && \
-    mkdir /home/antspyuser/.antspy && \
-    mkdir -p /home/antspyuser/.keras
+RUN mkdir -p /home/antspyuser/.keras
 
-COPY --from=builder /opt/ANTsPy/data/* /home/antspyuser/.antspy/
+# Copy script
+COPY do_antsxnet_thickness.py /opt
 
-# copy data required by the cortical thickness pipeline
+# Copy data required by the cortical thickness pipeline
 COPY ANTsXNetData /home/antspyuser/.keras/ANTsXNet
 
-LABEL maintainer="Philip A Cook (https://github.com/cookpa)"     
+LABEL maintainer="Philip A Cook (https://github.com/cookpa)" \
+      description="Cortical thickness script by Nick Tustison. \
+                   ANTsPyNet is part of the ANTsX ecosystem (https://github.com/ANTsX). \
+                   Citation: https://www.medrxiv.org/content/10.1101/2020.10.19.20215392v1"     
 
-WORKDIR /home/antspyuser
+RUN chown -R antspyuser /home/antspyuser/.keras && \
+    chgrp -R antspyuser /home/antspyuser/.keras
+
+# non-root user at run time
 USER antspyuser
+WORKDIR /home/antspyuser
 
-ENTRYPOINT ["python"]
-
+ENTRYPOINT ["python", "/opt/do_antsxnet_thickness.py"]
