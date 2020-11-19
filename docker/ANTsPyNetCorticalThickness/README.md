@@ -45,9 +45,8 @@ downloaded into the container. However, if you modify the script, the container
 might need to access more data at run time.
 
 If you run the container without Internet access and need additional data, you
-will need to download the data separately, including the data within the
-`ANTsXNet` folder here, and mount it within the container at
-`~/.keras/ANTsXNet`.
+will need to ensure all the data is available at run time in
+`/opt/dataCache/ANTsXNet`.
 
 
 See 

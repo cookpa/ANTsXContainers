@@ -22,6 +22,10 @@ t1_file = args.anatomical_image
 output_prefix = args.output_prefix
 threads = args.threads
 
+# Cache data location. Data is stored inside the container to avoid downloads at run time
+# which can fail in isolated cluster environments
+data_cache_dir = "/opt/dataCache/ANTsXNet"
+
 tf.keras.backend.clear_session()
 config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=threads,
                                   inter_op_parallelism_threads=threads)
@@ -36,7 +40,8 @@ kk_file = output_prefix + "CorticalThickness.nii.gz"
 kk = None
 if not path.exists(kk_file):
     print("    Atropos:  calculating\n")
-    atropos = antspynet.deep_atropos(t1, do_preprocessing=True, verbose=True)
+    atropos = antspynet.deep_atropos(t1, do_preprocessing=True, 
+                                     antsxnet_cache_directory=data_cache_dir, verbose=True)
     atropos_segmentation = atropos['segmentation_image']
 
     # Combine white matter and deep gray matter
@@ -59,7 +64,8 @@ dkt_file = output_prefix + "Dkt.nii.gz"
 dkt = None
 if not path.exists(dkt_file):
     print("    Calculating\n")
-    dkt = antspynet.desikan_killiany_tourville_labeling(t1, do_preprocessing=True, verbose=True)
+    dkt = antspynet.desikan_killiany_tourville_labeling(t1, do_preprocessing=True,
+                                                        antsxnet_cache_directory=data_cache_dir, verbose=True)
     ants.image_write(dkt, dkt_file)
 else:
     print("    Reading\n")
