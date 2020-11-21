@@ -14,7 +14,8 @@ import tensorflow as tf
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--anatomical-image", help="Input anatomical image (T1w)", type=str, required=True)
 parser.add_argument("-o", "--output-prefix", help="Output prefix", type=str)
-parser.add_argument("-t", "--threads", help="Number of threads", type=int, default=1)
+parser.add_argument("-t", "--threads", help="Number of threads in tensorflow operations. Use environment variable " \
+                    "ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS to control threading in ANTs calls", type=int, default=1)
 args = parser.parse_args()
 
 # Internal variables for args
