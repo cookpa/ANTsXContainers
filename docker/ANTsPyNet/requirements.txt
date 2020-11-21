@@ -1,4 +1,4 @@
-antspyx @ git+https://github.com/ANTsX/ANTsPy.git@bd9d3223c4486a3b7099a4c8424c335c79f0dc36
+antspyx @ git+https://github.com/ANTsX/ANTsPy.git@22ecee6b8909fb39dcb0271c676dd07d19bd84ca
 certifi==2020.6.20
 chardet==3.0.4
 chart-studio==1.1.0
