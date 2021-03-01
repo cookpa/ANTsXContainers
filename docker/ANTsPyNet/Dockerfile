@@ -34,5 +34,10 @@ COPY --from=builder /opt/ANTsPy/data/* /home/antspyuser/.antspy/
 WORKDIR /home/antspyuser
 USER antspyuser
 
+LABEL maintainer="Philip A Cook (https://github.com/cookpa)" \
+      description="ANTsPyNet is part of the ANTsX ecosystem (https://github.com/ANTsX). \
+ANTsPyNet Citation: https://www.medrxiv.org/content/10.1101/2020.10.19.20215392v1 \
+ANTs Citation: https://pubmed.ncbi.nlm.nih.gov/24879923"
+
 ENTRYPOINT ["python"]
 
