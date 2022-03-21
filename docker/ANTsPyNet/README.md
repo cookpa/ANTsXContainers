@@ -24,6 +24,9 @@ Singularity users without Internet access will need to mount data to
 `$HOME/.keras/ANTsXNet` or use `antsxnet_cache_directory` to indicate another
 location.
 
+The script `get_antspynet_data.py` can be used to download all the ANTsXNet data
+and networks.
+
 See 
 
 https://github.com/ANTsX/ANTsPyNet/blob/master/antspynet/utilities/get_antsxnet_data.py
