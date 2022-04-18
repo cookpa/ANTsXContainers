@@ -32,8 +32,10 @@ if (len(sys.argv) == 1):
 
     sys.exit(1)    
     
+# Base output dir, make ANTsXNet/ and keras.json under here
+output_dir=sys.argv[1]
 
-data_path = sys.argv[1]
+data_path = f"{output_dir}/ANTsXNet"
 
 allData = list(antspynet.get_antsxnet_data('show'))
 allData.remove('show')
@@ -49,3 +51,6 @@ allNetworks.remove('show')
 for entry in allNetworks:
   print(f"Downloading {entry}")
   antspynet.get_pretrained_network(entry, antsxnet_cache_directory=data_path)
+
+# Copy keras.json to output dir
+os.system(f"cp keras.json {output_dir}")
