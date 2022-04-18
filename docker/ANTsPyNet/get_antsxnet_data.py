@@ -8,11 +8,9 @@
 # or for applications lacking Internet access, the data can be downloaded with
 # this script.
 #
-# To use offline cached data, pass the absolute path to the ANTsXNetData/
-# directory in all calls to get_pretrained_network or get_antsxnet_data
-# eg 
+# To use the data in a container, mount the data directory containing keras.json 
+# as $USER/.keras. 
 #
-# get_pretrained_network('dktInner', antsxnet_cache_directory='/path/to/ANTsXNetData')
 #
 import antspynet
 import os
