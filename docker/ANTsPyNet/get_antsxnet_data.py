@@ -18,7 +18,9 @@ import sys
 
 if (len(sys.argv) == 1):
     usage = '''
-  Usage: {} /path/to/ANTsXNetData
+  Usage: {} /path/to/ANTsXNetData [doInstall=1]
+
+  Second argument can be passed to skip installation in docker files.
 
   Downloads ANTsXNet data and networks to the specified directory.
 
@@ -32,20 +34,29 @@ if (len(sys.argv) == 1):
 # Base output dir, make ANTsXNet/ and keras.json under here
 output_dir=sys.argv[1]
 
+do_install=1
+
+if len(sys.argv) > 2:
+    do_install = int(sys.argv[2])
+
+if do_install == 0:
+    # Exit 0, so docker won't think there's an error
+    sys.exit(0)
+
 data_path = f"{output_dir}/ANTsXNet"
 
-allData = list(antspynet.get_antsxnet_data('show'))
-allData.remove('show')
+all_data = list(antspynet.get_antsxnet_data('show'))
+all_data.remove('show')
 
-for entry in allData:
+for entry in all_data:
   print(f"Downloading {entry}")
   antspynet.get_antsxnet_data(entry, antsxnet_cache_directory=data_path)
 
-allNetworks = list(antspynet.get_pretrained_network('show'))
-allNetworks.remove('sixTissueOctantBrainSegmentationWithPriors2')
-allNetworks.remove('show')
+all_networks = list(antspynet.get_pretrained_network('show'))
+all_networks.remove('sixTissueOctantBrainSegmentationWithPriors2')
+all_networks.remove('show')
 
-for entry in allNetworks:
+for entry in all_networks:
   print(f"Downloading {entry}")
   antspynet.get_pretrained_network(entry, antsxnet_cache_directory=data_path)
 
