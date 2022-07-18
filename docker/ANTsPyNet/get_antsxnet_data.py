@@ -18,9 +18,12 @@ import sys
 
 if (len(sys.argv) == 1):
     usage = '''
-  Usage: {} /path/to/ANTsXNetData [doInstall=1]
+  Usage: {} /path/to/ANTsXNetData [doInstall=1] [dataList.txt] [networkList.txt]
 
   Second argument can be passed to skip installation in docker files.
+
+  Subsequent arguments, if specified, read a list of things to fetch from a text file.
+  This can be used to get a subset of the data / networks.
 
   Downloads ANTsXNet data and networks to the specified directory.
 
@@ -45,16 +48,28 @@ if do_install == 0:
 
 data_path = f"{output_dir}/ANTsXNet"
 
-all_data = list(antspynet.get_antsxnet_data('show'))
-all_data.remove('show')
+all_data = list()
+
+if len(sys.argv) > 3:
+    with open(sys.argv[3]) as f:
+        all_data = f.read().splitlines()
+else:
+    all_data = list(antspynet.get_antsxnet_data('show'))
+    all_data.remove('show')
 
 for entry in all_data:
   print(f"Downloading {entry}")
   antspynet.get_antsxnet_data(entry, antsxnet_cache_directory=data_path)
 
-all_networks = list(antspynet.get_pretrained_network('show'))
-all_networks.remove('sixTissueOctantBrainSegmentationWithPriors2')
-all_networks.remove('show')
+all_networks = list()
+
+if len(sys.argv) > 4:
+    with open(sys.argv[4]) as f:
+        all_networks = f.read().splitlines()
+else:
+    all_networks = list(antspynet.get_pretrained_network('show'))
+    all_networks.remove('sixTissueOctantBrainSegmentationWithPriors2')
+    all_networks.remove('show')
 
 for entry in all_networks:
   print(f"Downloading {entry}")

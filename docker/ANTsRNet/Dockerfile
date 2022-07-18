@@ -1,4 +1,6 @@
-FROM cookpa/antsr:0.5.7.4
+FROM cookpa/antsr:latest
+
+ARG install_antsxnet_data=0
 
 COPY installANTsRNet.R /opt
 
@@ -9,7 +11,7 @@ RUN apt-get update && \
       python3-venv && \
     python3 -m venv /opt/venv && \
     . /opt/venv/bin/activate && \
-    R_REMOTES_NO_ERRORS_FROM_WARNINGS=true Rscript /opt/installANTsRNet.R
+    R_REMOTES_NO_ERRORS_FROM_WARNINGS=true Rscript /opt/installANTsRNet.R ${install_antsxnet_data}
 
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
@@ -17,13 +19,21 @@ ENV R_DEFAULT_PACKAGES="datasets,utils,grDevices,graphics,stats,methods,ANTsR,AN
 
 # Make a user, ANTsXNet data can be added or downloaded at run time to ~/.keras
 RUN useradd --create-home antsrnetuser && \
-    mkdir -p /home/antsrnetuser/.local/share/r-reticulate 
+    mkdir -p /home/antsrnetuser/.local/share/r-reticulate && \
+    mkdir /home/antsrnetuser/.keras
 
 # This suppresses a miniconda installation prompt at run time
 COPY miniconda.json /home/antsrnetuser/.local/share/r-reticulate
+COPY keras.json /home/antsrnetuser/.keras/
+COPY get_antsxnet_data.R /opt/
 
-RUN chown -R antsrnetuser /home/antsrnetuser/.local && \
-    chgrp -R antsrnetuser /home/antsrnetuser/.local
+RUN echo "Install data option: ${install_antsxnet_data}"
+RUN R_REMOTES_NO_ERRORS_FROM_WARNINGS=true Rscript \
+    /opt/get_antsxnet_data.R /home/antsrnetuser/.keras ${install_antsxnet_data}
+
+
+RUN chown -R antsrnetuser /home/antsrnetuser/ && \
+    chgrp -R antsrnetuser /home/antsrnetuser/
 
 WORKDIR /home/antsrnetuser
 USER antsrnetuser

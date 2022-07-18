@@ -7,6 +7,6 @@ library(devtools)
 # without upgrading ANTsR
 install_github( "ANTsX/ANTsRNet", upgrade = "never" )
 
-# Installs tensorflow and python bindings 
-library(keras) 
+# Installs tensorflow and python bindings
+library(keras)
 install_keras(method = c("virtualenv"), version = "default", tensorflow = "default", extra_packages = c("tensorflow-hub"))
