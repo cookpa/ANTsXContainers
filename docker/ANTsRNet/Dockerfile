@@ -25,11 +25,11 @@ RUN useradd --create-home antsrnetuser && \
 # This suppresses a miniconda installation prompt at run time
 COPY miniconda.json /home/antsrnetuser/.local/share/r-reticulate
 COPY keras.json /home/antsrnetuser/.keras/
-COPY get_antsxnet_data.R /opt/
+COPY getAntsXNetData.R /opt/
 
 RUN echo "Install data option: ${install_antsxnet_data}"
 RUN R_REMOTES_NO_ERRORS_FROM_WARNINGS=true Rscript \
-    /opt/get_antsxnet_data.R /home/antsrnetuser/.keras ${install_antsxnet_data}
+    /opt/getAntsXNetData.R /home/antsrnetuser/.keras ${install_antsxnet_data}
 
 
 RUN chown -R antsrnetuser /home/antsrnetuser/ && \
