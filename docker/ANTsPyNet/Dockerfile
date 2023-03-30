@@ -3,7 +3,7 @@ FROM python:3.8.12-buster as builder
 COPY requirements.txt /opt
 
 # ANTsPy just used to get the data directory from its source zip
-ARG ANTSPY_DATA_VERSION=0.3.2
+ARG ANTSPY_DATA_VERSION=0.3.7
 
 ENV VIRTUAL_ENV=/opt/venv
 
@@ -20,7 +20,7 @@ RUN apt-get update && \
 
 FROM python:3.8.12-slim-buster
 
-ARG install_antsxnet_data=0
+ARG INSTALL_ANTSXNET_DATA=0
 
 ENV VIRTUAL_ENV=/opt/venv
 ENV ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1

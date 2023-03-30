@@ -69,6 +69,7 @@ if len(sys.argv) > 4:
 else:
     all_networks = list(antspynet.get_pretrained_network('show'))
     all_networks.remove('sixTissueOctantBrainSegmentationWithPriors2')
+    all_networks.remove('allen_brain_leftright_coronal_mask_weights')
     all_networks.remove('show')
 
 for entry in all_networks:

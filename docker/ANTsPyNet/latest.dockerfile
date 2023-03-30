@@ -1,7 +1,7 @@
 FROM python:3.8.12-buster as builder
 
 # ANTsPy just used to get the data directory from its source zip
-ARG ANTSPY_DATA_VERSION=0.3.2
+ARG ANTSPY_DATA_VERSION=0.3.7
 
 ENV VIRTUAL_ENV=/opt/venv
 
@@ -17,7 +17,8 @@ RUN apt-get update && \
 
 FROM python:3.8.12-slim-buster
 
-ARG install_antsxnet_data=0
+# Define here to not cause cache miss above when installing same version with / without data
+ARG INSTALL_ANTSXNET_DATA=0
 
 ENV VIRTUAL_ENV=/opt/venv
 ENV ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
@@ -35,7 +36,7 @@ COPY get_antsxnet_data.py /opt/
 
 RUN echo "Install data option: ${install_antsxnet_data}"
 RUN . ${VIRTUAL_ENV}/bin/activate && \
-    /opt/get_antsxnet_data.py /home/antspyuser/.keras ${install_antsxnet_data}
+    /opt/get_antsxnet_data.py /home/antspyuser/.keras ${INSTALL_ANTSXNET_DATA}
 
 COPY --from=builder --chown=antspyuser \
      /opt/antspydata/* /home/antspyuser/.antspy/
