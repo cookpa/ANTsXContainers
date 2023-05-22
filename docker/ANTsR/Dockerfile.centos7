@@ -1,0 +1,136 @@
+FROM centos/devtoolset-7-toolchain-centos7:7
+
+ARG CMAKE_VERSION=3.23.5
+
+USER root
+
+WORKDIR /opt/src
+
+RUN yum -y update && \
+    yum install -y devtoolset-7 git && \
+    echo "source /opt/rh/devtoolset-7/enable" >> /etc/profile.d/devtoolset-7.sh
+
+RUN curl -OL https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh && \
+    chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh && \
+    mkdir -p /opt/cmake/bin && \
+    ./cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license --prefix="/opt/cmake" && \
+    rm -f cmake-${CMAKE_VERSION}-linux-x86_64.sh
+
+# Enable EPEL repository
+RUN yum install -y epel-release && \
+    yum install -y libcurl-devel \
+                   libxml2-devel \
+                   openssl-devel \
+                   libjpeg-turbo-devel \
+                   libpng-devel \
+                   libtiff-devel \
+                   eigen3-devel \
+                   readline-devel \
+                   bzip2-devel \ 
+                   pcre2-devel \
+                   wget
+
+# Set environment variables for R
+ENV LANG="en_US.UTF-8"
+ENV LC_ALL="en_US.UTF-8"
+
+# Set environment variables for GCC 7
+ENV CC="/opt/rh/devtoolset-7/root/usr/bin/gcc"
+ENV CXX="/opt/rh/devtoolset-7/root/usr/bin/g++"
+
+# Add cmake to PATH
+ENV PATH="/opt/cmake/bin:$PATH"
+
+# Download and install R
+RUN wget https://cran.r-project.org/src/base/R-4/R-4.2.3.tar.gz && \
+    tar xvf R-4.2.3.tar.gz && \
+    cd R-4.2.3 && \
+    ./configure --with-x=no --prefix=/usr/local && \
+    make && \
+    make install && \
+    cd - && \
+    rm -rf /opt/src/R-4.2.3
+
+# Minimal dependencies, will not enable all functionality
+RUN Rscript -e "install.packages( \
+                     c('Rcpp', \
+                     'RcppEigen', \
+                     'magrittr',  \
+                     'rsvd',      \
+                     'magic',     \
+                     'psych'), dependencies = TRUE, \
+                     repos = 'https://cloud.r-project.org')" && \
+    Rscript -e "library('RcppEigen')"
+
+
+# Install ITKR, ANTsRCore, ANTsR from source
+RUN git clone --depth 1 https://github.com/stnava/ITKR.git && \
+    git clone --depth 1 https://github.com/ANTsX/ANTsRCore.git && \
+    git clone --depth 1 https://github.com/ANTsX/ANTsR.git && \
+    R CMD INSTALL ITKR && \
+    R CMD INSTALL ANTsRCore && \
+    R CMD INSTALL ANTsR && \
+    rm -rf ITKR ANTsRCore ANTsR
+
+# Some packages were removed from CRAN and need a github install
+RUN R_REMOTES_NO_ERRORS_FROM_WARNINGS=true \
+      Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')" \
+              -e "remotes::install_github('cran/ifultools')" \
+              -e "remotes::install_github('cran/DMwR')"
+
+RUN R_REMOTES_NO_ERRORS_FROM_WARNINGS=true \
+      Rscript -e "\
+      install.packages(c( \
+        'abind', \
+        'BGLR', \
+        'caret', \
+        'cluster', \
+        'corpcor', \
+        'dplyr', \
+        'e1071', \
+        'extremevalues', \
+        'fastICA', \
+        'FNN', \
+        'fpc', \
+        'ggplot2', \
+        'glasso', \
+        'glmnet', \
+        'grid', \
+        'hdf5r', \
+        'igraph', \
+        'irlba', \
+        'knitr', \
+        'mFilter', \
+        'misc3d', \
+        'moments', \
+        'networkD3', \
+        'pixmap', \
+        'png', \
+        'pracma', \
+        'R.matlab', \
+        'randomForest', \
+        'RcppHNSW', \
+        'rgl', \
+        'rmarkdown', \
+        'robust', \
+        'robustbase', \
+        'signal', \
+        'sna', \
+        'testthat', \
+        'viridis', \
+        'visreg', \
+        'wmtsa', \
+        'xgboost' \
+     ), repos = 'https://cloud.r-project.org')"
+
+WORKDIR /
+
+RUN useradd -ms /bin/bash antsruser
+
+USER antsruser
+
+ENV R_DEFAULT_PACKAGES="datasets,utils,grDevices,graphics,stats,methods,ANTsR"
+ENV ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
+
+# Set the default CMD to launch R
+CMD ["R"]
