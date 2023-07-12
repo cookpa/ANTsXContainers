@@ -12,7 +12,7 @@ RUN apt-get update && \
     . ${VIRTUAL_ENV}/bin/activate && \
     pip install wheel && \
     pip install --requirement /opt/requirements.txt && \
-    pip install antspynet==0.1.8 && \
+    pip install antspynet==0.2.2 && \
     wget -O /opt/antsPy-${ANTSPY_DATA_VERSION}.zip \
       https://github.com/ANTsX/ANTsPy/archive/refs/tags/v${ANTSPY_DATA_VERSION}.zip && \
     unzip /opt/antsPy-${ANTSPY_DATA_VERSION}.zip -d /opt/ANTsPy && \
@@ -38,7 +38,7 @@ COPY get_antsxnet_data.py /opt/
 
 RUN echo "Install data option: ${install_antsxnet_data}"
 RUN . ${VIRTUAL_ENV}/bin/activate && \
-    /opt/get_antsxnet_data.py /home/antspyuser/.keras ${install_antsxnet_data}
+    /opt/get_antsxnet_data.py /home/antspyuser/.keras ${INSTALL_ANTSXNET_DATA}
 
 COPY --from=builder --chown=antspyuser \
      /opt/antspydata/* /home/antspyuser/.antspy/

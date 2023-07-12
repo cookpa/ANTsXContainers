@@ -3,7 +3,7 @@
 This container is similar to the ANTsPy build, but additionally builds
 ANTsPyNet.
 
-We don't use ANTsPy as a base layer because of dependency conflicts. 
+We don't use ANTsPy as a base layer because of dependency conflicts.
 
 
 ## Version and dependency information

@@ -1,7 +1,7 @@
 FROM python:3.8.12-buster as builder
 
 # ANTsPy just used to get the data directory from its source zip
-ARG ANTSPY_DATA_VERSION=0.3.7
+ARG ANTSPY_DATA_VERSION=0.3.8
 
 ENV VIRTUAL_ENV=/opt/venv
 
