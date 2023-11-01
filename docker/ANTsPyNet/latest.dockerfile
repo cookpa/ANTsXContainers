@@ -1,4 +1,4 @@
-FROM python:3.8.12-buster as builder
+FROM python:3.11.6-bookworm as builder
 
 # ANTsPy just used to get the data directory from its source zip
 ARG ANTSPY_DATA_VERSION=0.3.8
@@ -15,7 +15,7 @@ RUN apt-get update && \
     unzip /opt/antsPy-${ANTSPY_DATA_VERSION}.zip -d /opt/ANTsPy && \
     cp -r /opt/ANTsPy/ANTsPy-${ANTSPY_DATA_VERSION}/data /opt/antspydata
 
-FROM python:3.8.12-slim-buster
+FROM python:3.11.6-slim-bookworm
 
 # Define here to not cause cache miss above when installing same version with / without data
 ARG INSTALL_ANTSXNET_DATA=0

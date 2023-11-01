@@ -1,9 +1,9 @@
-FROM python:3.8.12-buster as builder
+FROM python:3.11.6-bookworm as builder
 
 COPY requirements.txt /opt
 
 # ANTsPy just used to get the data directory from its source zip
-ARG ANTSPY_DATA_VERSION=0.3.7
+ARG ANTSPY_DATA_VERSION=0.3.8
 
 ENV VIRTUAL_ENV=/opt/venv
 
@@ -12,13 +12,13 @@ RUN apt-get update && \
     . ${VIRTUAL_ENV}/bin/activate && \
     pip install wheel && \
     pip install --requirement /opt/requirements.txt && \
-    pip install antspynet==0.2.2 && \
+    pip install antspynet==0.2.3 && \
     wget -O /opt/antsPy-${ANTSPY_DATA_VERSION}.zip \
       https://github.com/ANTsX/ANTsPy/archive/refs/tags/v${ANTSPY_DATA_VERSION}.zip && \
     unzip /opt/antsPy-${ANTSPY_DATA_VERSION}.zip -d /opt/ANTsPy && \
     cp -r /opt/ANTsPy/ANTsPy-${ANTSPY_DATA_VERSION}/data /opt/antspydata
 
-FROM python:3.8.12-slim-buster
+FROM python:3.11.6-slim-bookworm
 
 ARG INSTALL_ANTSXNET_DATA=0
 

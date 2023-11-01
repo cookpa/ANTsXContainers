@@ -54,12 +54,15 @@ if len(sys.argv) > 3:
     with open(sys.argv[3]) as f:
         all_data = f.read().splitlines()
 else:
-    all_data = list(antspynet.get_antsxnet_data('show'))
-    all_data.remove('show')
+        all_data = list(antspynet.get_antsxnet_data('show'))
+        all_data.remove('show')
 
 for entry in all_data:
-  print(f"Downloading {entry}")
-  antspynet.get_antsxnet_data(entry, antsxnet_cache_directory=data_path)
+    print(f"Downloading {entry}")
+    try:
+        antspynet.get_antsxnet_data(entry, antsxnet_cache_directory=data_path)
+    except NotImplementedError as e:
+        print(f"Failed to download {entry}")
 
 all_networks = list()
 
@@ -76,6 +79,9 @@ else:
     all_networks.remove('show')
 
 for entry in all_networks:
-  print(f"Downloading {entry}")
-  antspynet.get_pretrained_network(entry, antsxnet_cache_directory=data_path)
+    print(f"Downloading {entry}")
+    try:
+        antspynet.get_pretrained_network(entry, antsxnet_cache_directory=data_path)
+    except NotImplementedError as e:
+        print(f"Failed to download {entry}")
 
