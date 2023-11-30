@@ -1,5 +1,5 @@
 absl-py==1.4.0
-antspyx==0.3.8
+antspyx==0.4.2
 astunparse==1.6.3
 cachetools==5.3.1
 certifi==2023.5.7

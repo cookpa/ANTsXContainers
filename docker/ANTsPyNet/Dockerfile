@@ -3,7 +3,7 @@ FROM python:3.11.6-bookworm as builder
 COPY requirements.txt /opt
 
 # ANTsPy just used to get the data directory from its source zip
-ARG ANTSPY_DATA_VERSION=0.3.8
+ARG ANTSPY_DATA_VERSION=0.4.2
 
 ENV VIRTUAL_ENV=/opt/venv
 
