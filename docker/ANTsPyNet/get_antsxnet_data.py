@@ -12,8 +12,6 @@
 # as $USER/.keras.
 #
 #
-import antspynet
-import os
 import sys
 
 if (len(sys.argv) == 1):
@@ -33,6 +31,8 @@ if (len(sys.argv) == 1):
     print(usage.format(sys.argv[0]))
 
     sys.exit(1)
+
+import antspynet
 
 # Base output dir, make ANTsXNet/ and keras.json under here
 output_dir=sys.argv[1]

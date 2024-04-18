@@ -28,12 +28,16 @@ ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-# Make a user and add data to the expected location
+# Make a user and add data to the expected location for antspy
+# Also set up .keras directory for antspynet data and models
+# Note this is owned by root ant not writeable by the user
+#
+# This is to prevent users spinning up multiple instances of the
+# container and downloading the same data to a non-persistent location
+#
 RUN useradd --create-home antspyuser && \
-    mkdir /home/antspyuser/.antspy \
-          /home/antspyuser/.keras
+    mkdir /home/antspyuser/.antspy /home/antspyuser/.keras
 
-COPY keras.json /home/antspyuser/.keras/
 COPY get_antsxnet_data.py /opt/
 
 RUN echo "Install data option: ${install_antsxnet_data}"
@@ -42,6 +46,8 @@ RUN . ${VIRTUAL_ENV}/bin/activate && \
 
 COPY --from=builder --chown=antspyuser \
      /opt/antspydata/* /home/antspyuser/.antspy/
+
+RUN chmod -R 0755 /home/antspyuser/.antspy /home/antspyuser/.keras
 
 WORKDIR /home/antspyuser
 USER antspyuser

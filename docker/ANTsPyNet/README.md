@@ -62,3 +62,15 @@ and networks, which can be mounted at run time.
 
 Alternatively, pull the cookpa/antspynet:version-with-data image, which has the
 data pre-installed. Beware this makes the container much larger.
+
+
+### Ensuring cache validity ###
+
+Running multiple versions of ANTsPyNet with the same cache directory can lead to
+conflicts. ANTsPyNet fetches data based on unique identifiers encoded in the source, so it
+will never fetch the wrong data even if newer data exists. However, the cached file names
+on disk are shared across versions, so for example if
+`~/.keras/ANTsXNet/brainExtractionRobustT1.h5` has been downloaded already, it will not be
+updated even if ANTsPyNet is updated. Similarly, if a a new version of that file is
+downloaded, it will be used by by older ANTsPyNet installations that use the same cache
+directory.
