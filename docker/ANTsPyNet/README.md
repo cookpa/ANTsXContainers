@@ -1,10 +1,11 @@
 # ANTsPyNet docker
 
-This container is similar to the ANTsPy build, but additionally builds
-ANTsPyNet.
+Container for ANTsPyNet with an option to pre-install data and pre-trained networks.
 
-We don't use ANTsPy as a base layer because of dependency conflicts.
+## Default user
 
+The docker user is `antspyuser`, and the home directory `/home/antspyuser` exists in the
+container. The container always has the ANTsPy data, so that you can call `ants.get_data`.
 
 ## Version and dependency information
 
@@ -28,9 +29,17 @@ Functions that use ANTsXNet external data take a parameter
 
 By default, data is downloaded on demand and stored in a cache directory at
 `${HOME}/.keras`. This needs to be handled differently in docker vs singularity.
+With the default user, attempts to download data will fail because the directory
+`/home/antspyuser` is not writeable. This is by design, to prevent users unknowingly
+downloading large amounts of data by running a container repeatedly, or by running many
+containers in parallel.
 
-To include data in a container build, use `--build-arg install_antsxnet_data=1`.
+To include all available data in a container build, use
+`--build-arg install_antsxnet_data=1` when building the container, or pull from the
+`latest-with-data` tag on Dockerhub.
 
+Alternatively, users may mount directories on the local file systems to use as cache
+locations.
 
 ### In docker
 
