@@ -38,11 +38,11 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 RUN useradd --create-home antspyuser && \
     mkdir /home/antspyuser/.antspy /home/antspyuser/.keras
 
-COPY get_antsxnet_data.py /opt/
+COPY get_antsxnet_data.py /opt/bin/
 
 RUN echo "Install data option: ${install_antsxnet_data}"
 RUN . ${VIRTUAL_ENV}/bin/activate && \
-    /opt/get_antsxnet_data.py /home/antspyuser/.keras ${INSTALL_ANTSXNET_DATA}
+    /opt/bin/get_antsxnet_data.py /home/antspyuser/.keras ${INSTALL_ANTSXNET_DATA}
 
 COPY --from=builder --chown=antspyuser \
      /opt/antspydata/* /home/antspyuser/.antspy/
