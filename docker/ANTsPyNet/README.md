@@ -11,8 +11,6 @@ container. The container always has the ANTsPy data, so that you can call `ants.
 
 Run the container with `-m pip freeze` to get version information.
 
-Dependencies are installed first using `requirements.txt`.
-
 The main Dockerfile will build a specific tagged release, while
 latest.dockerfile will build the current HEAD revision of the ANTsPyNet master
 branch.
@@ -34,9 +32,13 @@ With the default user, attempts to download data will fail because the directory
 downloading large amounts of data by running a container repeatedly, or by running many
 containers in parallel.
 
-To include all available data in a container build, use
-`--build-arg install_antsxnet_data=1` when building the container, or pull from the
-`latest-with-data` tag on Dockerhub.
+To include all available data in a container build, build from the
+`latest_with_data.dockerfile`, or pull from the `latest-with-data` tag on Dockerhub. Note
+that if you build locally, you will need to build without data first, then edit the top
+line of the Dockerfile to point to the latest version of ANTsPyNet.
+
+This two-build system was chosen to avoid DockerHub timeouts when trying to build in one
+pass and push all the layers at once.
 
 Alternatively, users may mount directories on the local file systems to use as cache
 locations.
