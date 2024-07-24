@@ -1,6 +1,7 @@
 FROM python:3.11.6-bookworm as builder
 
-# ANTsPy just used to get the data directory from its source zip
+# Pull data from this version, but install latest
+# development antspy
 ARG ANTSPY_DATA_VERSION=0.4.2
 
 ENV VIRTUAL_ENV=/opt/venv
@@ -9,6 +10,7 @@ RUN apt-get update && \
     python3 -m venv ${VIRTUAL_ENV} && \
     . ${VIRTUAL_ENV}/bin/activate && \
     pip install wheel && \
+    pip install git+https://github.com/ANTsX/ANTsPy.git && \
     pip install git+https://github.com/ANTsX/ANTsPyNet.git && \
     wget -O /opt/antsPy-${ANTSPY_DATA_VERSION}.zip \
       https://github.com/ANTsX/ANTsPy/archive/refs/tags/v${ANTSPY_DATA_VERSION}.zip && \
@@ -19,6 +21,10 @@ RUN apt-get update && \
 
 
 FROM python:3.11.6-slim-bookworm
+
+RUN apt-get update && \
+    apt-get install -y libpng16-16 && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV VIRTUAL_ENV=/opt/venv
 ENV ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
