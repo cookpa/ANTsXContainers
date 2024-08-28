@@ -57,10 +57,12 @@ else:
         all_data = list(antspynet.get_antsxnet_data('show'))
         all_data.remove('show')
 
+antspynet.set_antsxnet_cache_directory(data_path)
+
 for entry in all_data:
     print(f"Downloading {entry}")
     try:
-        antspynet.get_antsxnet_data(entry, antsxnet_cache_directory=data_path)
+        antspynet.get_antsxnet_data(entry)
     except NotImplementedError as e:
         print(f"Failed to download {entry}")
 
@@ -80,7 +82,7 @@ else:
 for entry in all_networks:
     print(f"Downloading {entry}")
     try:
-        antspynet.get_pretrained_network(entry, antsxnet_cache_directory=data_path)
+        antspynet.get_pretrained_network(entry)
     except NotImplementedError as e:
         print(f"Failed to download {entry}")
 
