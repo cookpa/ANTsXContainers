@@ -1,4 +1,4 @@
-FROM python:3.11.6-bookworm as builder
+FROM python:3.11.9-bookworm AS builder
 
 # Pull data from this version, but install latest
 # development antspy
@@ -20,7 +20,7 @@ RUN apt-get update && \
     chmod 0644 /opt/antspydata*
 
 
-FROM python:3.11.6-slim-bookworm
+FROM python:3.11.9-slim-bookworm
 
 RUN apt-get update && \
     apt-get install -y libpng16-16 && \

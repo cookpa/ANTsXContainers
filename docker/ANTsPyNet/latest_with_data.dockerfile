@@ -1,4 +1,4 @@
-FROM cookpa/antspynet:latest as builder
+FROM cookpa/antspynet:latest AS builder
 
 COPY get_antsxnet_data.py /opt/bin/
 
