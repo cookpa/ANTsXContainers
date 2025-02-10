@@ -12,7 +12,7 @@ RUN apt-get update && \
     . ${VIRTUAL_ENV}/bin/activate && \
     pip install wheel && \
     pip install --requirement /opt/requirements.txt && \
-    pip install antspynet==0.2.3 && \
+    pip install antspynet==0.2.9 && \
     wget -O /opt/antsPy-${ANTSPY_DATA_VERSION}.zip \
       https://github.com/ANTsX/ANTsPy/archive/refs/tags/v${ANTSPY_DATA_VERSION}.zip && \
     unzip /opt/antsPy-${ANTSPY_DATA_VERSION}.zip -d /opt/ANTsPy && \
@@ -27,6 +27,12 @@ ENV ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
 ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+
+RUN apt-get update && \
+    apt-get install -y \
+      libpng16-16 \
+      procps && \
+    rm -rf /var/lib/apt/lists/*
 
 # Make a user and add data to the expected location for antspy
 # Also set up .keras directory for antspynet data and models
