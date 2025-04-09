@@ -14,7 +14,7 @@ Download Docker images from
 To build a Singularity image, 
 
 ```
-sudo singularity build myAntsXImage.sif docker://cookpa/antsximage:tag
+singularity build myAntsXImage.sif docker://cookpa/antsximage:tag
 ```
 
 where "antsximage" is the Docker Hub repository you want to build from, and
