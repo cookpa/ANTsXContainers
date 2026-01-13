@@ -1,8 +1,8 @@
 FROM python:3.11.10-bookworm AS builder
 
-# Pull data from this version, but install latest
+# Pull data from this version (rarely changes), but install latest
 # development antspy
-ARG ANTSPY_DATA_VERSION=0.5.2
+ARG ANTSPY_DATA_VERSION=0.5.4
 
 ENV VIRTUAL_ENV=/opt/venv
 

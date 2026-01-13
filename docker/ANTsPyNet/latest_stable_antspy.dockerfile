@@ -1,7 +1,7 @@
 FROM python:3.11.10-bookworm AS builder
 
-# Pull data from this version, but install latest
-# development antspy
+# Pull data from this version (rarely changes), but install latest
+# pypi version of antspy
 ARG ANTSPY_DATA_VERSION=0.5.4
 
 ENV VIRTUAL_ENV=/opt/venv
@@ -45,8 +45,6 @@ RUN useradd --create-home antspyuser && \
     mkdir /home/antspyuser/.antspy \
           /home/antspyuser/.keras && \
     chown antspyuser /home/antspyuser/.antspy
-
-COPY get_antsxnet_data.py /opt/bin/
 
 COPY --from=builder --chown=antspyuser \
      /opt/antspydata/* /home/antspyuser/.antspy/
